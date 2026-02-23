@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+// use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
         $loginInput = $request->login;
 
-        // Cek apakah input email atau username
+        // Cek apakah email atau username
         $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL)
             ? 'email'
             : 'username';
@@ -42,7 +42,10 @@ class AuthenticatedSessionController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($credentials)) {
+        // 🔥 Ambil remember checkbox
+        $remember = $request->boolean('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
 
             $request->session()->regenerate();
 
